@@ -1,0 +1,28 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+Loading up the library
+```{r}
+library(tidyverse)
+library(viridis)
+library(janitor)
+```
+
+Read in the orginal data
+```{r}
+nursing <- read_csv("data/De-Identified Informatics Competency Assessment for June 2024 Faculty  (Responses) - Form Responses 1.csv") |> 
+  clean_names()
+```
+
+changing some data table name
+```{r}
+new_names <- c("timestamp", "email_adress", "score", "current_role", "different_role", "teaching_informatics", "informatics_role_in_healthcare", "years_of_teaching_in_higher_education", "rank", "gender", "education_level", "ethnicity", "communication_technologies_in_healthcare_q1", "implement_health_information_technologies_q2", "deliver_care_q3", "workflow_processes/patient_client_outcomes_q4", "gather/generate/document/identify_q5", "entering_accurate_data_q6", "how_data_moves_q7", "identify_appropriate_data_q8", "describe_standardized_data_q9", "generate_information/knowledge_q10", "use_standardized_data_q11", "find/interpret_primary_and_secondary_data_q12", "use_appropriate_information/communication_technologies_q13", "understand_decision_support_tools_q14", "identify_emerging_technologies_q15", "impact_on_quality/safe_care_q16", "address_patients_needs_and_care_gaps_q17", "unexpected_consequences_of_implementation_q18", "how_data_is_exchanged_q19", "the_latest_legal_and_regulatory_requirements_q20", "patients_right_to_access/review/correct_q21")
+
+nursing_new <- nursing
+
+names(nursing_new) <- new_names
+```
+
+

@@ -127,8 +127,20 @@ nursing_new <- nursing_new |>
 
 Create one standardized response for evaluation
 ```{r}
-nursing_test <- nursing_new |> 
+nursing_new <- nursing_new |> 
   mutate(confidence_score = (num_q10+num_q11+num_q12+num_q13+num_q14+num_q15+num_q16+num_q17+num_q18+num_q19+num_q20+num_q21)/12)
+```
+
+Interactions based on the numerical response
+```{r}
+ggplot(nursing_new, aes(y = current_role, x = confidence_score))+
+  geom_boxplot()
+
+ggplot(nursing_new, aes(y = years_of_teaching_in_higher_education, x = confidence_score))+
+  geom_boxplot()
+
+ggplot(nursing_new, aes(y = gender, x = confidence_score))+
+  geom_boxplot()
 ```
 
 

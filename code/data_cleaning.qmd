@@ -18,7 +18,7 @@ nursing <- read_csv("data/De-Identified Informatics Competency Assessment for Ju
 
 changing some data table name
 ```{r}
-new_names <- c("timestamp", "email_adress", "score", "current_role", "different_role", "teaching_informatics", "informatics_role_in_healthcare", "years_of_teaching_in_higher_education", "rank", "gender", "education_level", "ethnicity", "communication_technologies_in_healthcare_q1", "implement_health_information_technologies_q2", "deliver_care_q3", "workflow_processes_patient_client_outcomes_q4", "gather_generate_document_identify_q5", "entering_accurate_data_q6", "how_data_moves_q7", "identify_appropriate_data_q8", "describe_standardized_data_q9", "generate_information_knowledge_q10", "use_standardized_data_q11", "find_interpret_primary_and_secondary_data_q12", "use_appropriate_information/communication_technologies_q13", "understand_decision_support_tools_q14", "identify_emerging_technologies_q15", "impact_on_quality_safe_care_q16", "address_patients_needs_and_care_gaps_q17", "unexpected_consequences_of_implementation_q18", "how_data_is_exchanged_q19", "the_latest_legal_and_regulatory_requirements_q20", "patients_right_to_access_review_correct_q21")
+new_names <- c("timestamp", "email_adress", "score", "current_role", "different_role", "teaching_informatics", "informatics_role_in_healthcare", "years_of_teaching_in_higher_education", "rank", "gender", "education_level", "ethnicity", "communication_technologies_in_healthcare_q1", "implement_health_information_technologies_q2", "deliver_care_q3", "workflow_processes_patient_client_outcomes_q4", "gather_generate_document_identify_q5", "entering_accurate_data_q6", "how_data_moves_q7", "identify_appropriate_data_q8", "describe_standardized_data_q9", "generate_information_knowledge_q10", "use_standardized_data_q11", "find_interpret_primary_and_secondary_data_q12", "use_appropriate_information_communication_technologies_q13", "understand_decision_support_tools_q14", "identify_emerging_technologies_q15", "impact_on_quality_safe_care_q16", "address_patients_needs_and_care_gaps_q17", "unexpected_consequences_of_implementation_q18", "how_data_is_exchanged_q19", "the_latest_legal_and_regulatory_requirements_q20", "patients_right_to_access_review_correct_q21")
 
 nursing_new <- nursing
 
@@ -47,10 +47,90 @@ nursing_new<-nursing_new |>
 
 ```
 
+Numericalized response
+
 ```{r}
-nursing_new |> 
-  mutate(case_when)
+nursing_new <- nursing_new |> 
+  mutate(num_q10 = case_when(generate_information_knowledge_q10 == "No knowledge/no skill/unable to teach" ~ 0,
+                   generate_information_knowledge_q10 == "Minimal knowledge/ minimal skill"~1,
+                   generate_information_knowledge_q10 == "Moderate knowledge/ some skill"~2,
+                   generate_information_knowledge_q10 == "Adequate knowledge/ adequate skill/ could teach" ~ 3,
+                   generate_information_knowledge_q10 == "Excellent: very knowledgeable/skilled/comfortable to teach" ~ 4,
+                   TRUE ~ NA_real_)) |> 
+  mutate(num_q11 = case_when(use_standardized_data_q11 == "No knowledge/no skill/unable to teach" ~ 0,
+                   use_standardized_data_q11 == "Minimal knowledge/ minimal skill"~1,
+                   use_standardized_data_q11 == "Moderate knowledge/ some skill"~2,
+                   use_standardized_data_q11 == "Adequate knowledge/ adequate skill/ could teach" ~ 3,
+                   use_standardized_data_q11 == "Excellent: very knowledgeable/skilled/comfortable to teach" ~ 4,
+                   TRUE ~ NA_real_)) |> 
+  mutate(num_q12 = case_when(find_interpret_primary_and_secondary_data_q12 == "No knowledge/no skill/unable to teach" ~ 0,
+                   find_interpret_primary_and_secondary_data_q12 == "Minimal knowledge/ minimal skill"~1,
+                   find_interpret_primary_and_secondary_data_q12 == "Moderate knowledge/ some skill"~2,
+                   find_interpret_primary_and_secondary_data_q12 == "Adequate knowledge/ adequate skill/ could teach" ~ 3,
+                   find_interpret_primary_and_secondary_data_q12 == "Excellent: very knowledgeable/skilled/comfortable to teach" ~ 4,
+                   TRUE ~ NA_real_)) |> 
+  mutate(num_q13 = case_when(use_appropriate_information_communication_technologies_q13 == "No knowledge/no skill/unable to teach" ~ 0,
+                   use_appropriate_information_communication_technologies_q13 == "Minimal knowledge/ minimal skill"~1,
+                   use_appropriate_information_communication_technologies_q13 == "Moderate knowledge/ some skill"~2,
+                   use_appropriate_information_communication_technologies_q13 == "Adequate knowledge/ adequate skill/ could teach" ~ 3,
+                   use_appropriate_information_communication_technologies_q13 == "Excellent: very knowledgeable/skilled/comfortable to teach" ~ 4,
+                   TRUE ~ NA_real_)) |> 
+  mutate(num_q14 = case_when(understand_decision_support_tools_q14 == "No knowledge/no skill/unable to teach" ~ 0,
+                   understand_decision_support_tools_q14 == "Minimal knowledge/ minimal skill"~1,
+                   understand_decision_support_tools_q14 == "Moderate knowledge/ some skill"~2,
+                   understand_decision_support_tools_q14 == "Adequate knowledge/ adequate skill/ could teach" ~ 3,
+                   understand_decision_support_tools_q14 == "Excellent: very knowledgeable/skilled/comfortable to teach" ~ 4,
+                   TRUE ~ NA_real_)) |> 
+  mutate(num_q15 = case_when(identify_emerging_technologies_q15 == "No knowledge/no skill/unable to teach" ~ 0,
+                   identify_emerging_technologies_q15 == "Minimal knowledge/ minimal skill"~1,
+                   identify_emerging_technologies_q15 == "Moderate knowledge/ some skill"~2,
+                   identify_emerging_technologies_q15 == "Adequate knowledge/ adequate skill/ could teach" ~ 3,
+                   identify_emerging_technologies_q15 == "Excellent: very knowledgeable/skilled/comfortable to teach" ~ 4,
+                   TRUE ~ NA_real_)) |> 
+  mutate(num_q16 = case_when(impact_on_quality_safe_care_q16 == "No knowledge/no skill/unable to teach" ~ 0,
+                   impact_on_quality_safe_care_q16 == "Minimal knowledge/ minimal skill"~1,
+                   impact_on_quality_safe_care_q16 == "Moderate knowledge/ some skill"~2,
+                   impact_on_quality_safe_care_q16 == "Adequate knowledge/ adequate skill/ could teach" ~ 3,
+                   impact_on_quality_safe_care_q16 == "Excellent: very knowledgeable/skilled/comfortable to teach" ~ 4,
+                   TRUE ~ NA_real_)) |> 
+  mutate(num_q17 = case_when(address_patients_needs_and_care_gaps_q17 == "No knowledge/no skill/unable to teach" ~ 0,
+                   address_patients_needs_and_care_gaps_q17 == "Minimal knowledge/ minimal skill"~1,
+                   address_patients_needs_and_care_gaps_q17 == "Moderate knowledge/ some skill"~2,
+                   address_patients_needs_and_care_gaps_q17 == "Adequate knowledge/ adequate skill/ could teach" ~ 3,
+                   address_patients_needs_and_care_gaps_q17 == "Excellent: very knowledgeable/skilled/comfortable to teach" ~ 4,
+                   TRUE ~ NA_real_)) |> 
+  mutate(num_q18 = case_when(unexpected_consequences_of_implementation_q18 == "No knowledge/no skill/unable to teach" ~ 0,
+                   unexpected_consequences_of_implementation_q18 == "Minimal knowledge/ minimal skill"~1,
+                   unexpected_consequences_of_implementation_q18 == "Moderate knowledge/ some skill"~2,
+                   unexpected_consequences_of_implementation_q18 == "Adequate knowledge/ adequate skill/ could teach" ~ 3,
+                   unexpected_consequences_of_implementation_q18 == "Excellent: very knowledgeable/skilled/comfortable to teach" ~ 4,
+                   TRUE ~ NA_real_)) |> 
+  mutate(num_q19 = case_when(how_data_is_exchanged_q19 == "No knowledge/no skill/unable to teach" ~ 0,
+                   how_data_is_exchanged_q19 == "Minimal knowledge/ minimal skill"~1,
+                   how_data_is_exchanged_q19 == "Moderate knowledge/ some skill"~2,
+                   how_data_is_exchanged_q19 == "Adequate knowledge/ adequate skill/ could teach" ~ 3,
+                   how_data_is_exchanged_q19 == "Excellent: very knowledgeable/skilled/comfortable to teach" ~ 4,
+                   TRUE ~ NA_real_)) |> 
+  mutate(num_q20 = case_when(the_latest_legal_and_regulatory_requirements_q20 == "No knowledge/no skill/unable to teach" ~ 0,
+                   the_latest_legal_and_regulatory_requirements_q20 == "Minimal knowledge/ minimal skill"~1,
+                   the_latest_legal_and_regulatory_requirements_q20 == "Moderate knowledge/ some skill"~2,
+                   the_latest_legal_and_regulatory_requirements_q20 == "Adequate knowledge/ adequate skill/ could teach" ~ 3,
+                   the_latest_legal_and_regulatory_requirements_q20 == "Excellent: very knowledgeable/skilled/comfortable to teach" ~ 4,
+                   TRUE ~ NA_real_)) |> 
+  mutate(num_q21 = case_when(patients_right_to_access_review_correct_q21 == "No knowledge/no skill/unable to teach" ~ 0,
+                   patients_right_to_access_review_correct_q21 == "Minimal knowledge/ minimal skill"~1,
+                   patients_right_to_access_review_correct_q21 == "Moderate knowledge/ some skill"~2,
+                   patients_right_to_access_review_correct_q21 == "Adequate knowledge/ adequate skill/ could teach" ~ 3,
+                   patients_right_to_access_review_correct_q21 == "Excellent: very knowledgeable/skilled/comfortable to teach" ~ 4,
+                   TRUE ~ NA_real_))
 ```
+
+Create one standardized response for evaluation
+```{r}
+nursing_test <- nursing_new |> 
+  mutate(confidence_score = (num_q10+num_q11+num_q12+num_q13+num_q14+num_q15+num_q16+num_q17+num_q18+num_q19+num_q20+num_q21)/12)
+```
+
 
 
 EDA: Interaction

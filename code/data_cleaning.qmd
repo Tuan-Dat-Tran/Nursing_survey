@@ -8,6 +8,7 @@ Loading up the library
 library(tidyverse)
 library(viridis)
 library(janitor)
+library(ggdist)
 ```
 
 Read in the orginal data
@@ -141,6 +142,9 @@ ggplot(nursing_new, aes(y = years_of_teaching_in_higher_education, x = confidenc
 
 ggplot(nursing_new, aes(y = gender, x = confidence_score))+
   geom_boxplot()
+
+nursing_new |> 
+  count(gender)
 ```
 
 
@@ -150,7 +154,10 @@ EDA: Interaction
 nursing_long <-nursing_new |> 
   select(generate_information_knowledge_q10:patients_right_to_access_review_correct_q21) |> 
   drop_na() |> 
-  pivot_longer(cols = everything(), names_to = "question", values_to = "response")
+  pivot_longer(cols = everything(), names_to = "question", values_to = "response") |> 
+mutate(response = factor(response, 
+              levels = c("Excellent: very knowledgeable/skilled/comfortable to teach", "Adequate knowledge/ adequate skill/ could teach", "Moderate knowledge/ some skill, Adequate knowledge/ adequate skill/ could teach", "Moderate knowledge/ some skill", "Minimal knowledge/ minimal skill", "No knowledge/no skill/unable to teach, Minimal knowledge/ minimal skill", "No knowledge/no skill/unable to teach"),
+              ordered = TRUE)) # Make it an ordered factor
 
 ggplot(nursing_long, aes(y = question, fill = response)) +
   geom_bar(position = "fill") +
@@ -159,8 +166,8 @@ ggplot(nursing_long, aes(y = question, fill = response)) +
        y = "",
        fill = "") +
   theme_minimal()+
-  theme(axis.text.y = element_blank(), 
-        axis.ticks.y = element_blank())+
+  # theme(axis.text.y = element_blank(), 
+  #       axis.ticks.y = element_blank())+
   scale_fill_viridis_d()
 ```
 Table for interaction

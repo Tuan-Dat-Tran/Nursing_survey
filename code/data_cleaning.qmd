@@ -157,7 +157,10 @@ nursing_long <-nursing_new |>
   pivot_longer(cols = everything(), names_to = "question", values_to = "response") |> 
 mutate(response = factor(response, 
               levels = c("Excellent: very knowledgeable/skilled/comfortable to teach", "Adequate knowledge/ adequate skill/ could teach", "Moderate knowledge/ some skill, Adequate knowledge/ adequate skill/ could teach", "Moderate knowledge/ some skill", "Minimal knowledge/ minimal skill", "No knowledge/no skill/unable to teach, Minimal knowledge/ minimal skill", "No knowledge/no skill/unable to teach"),
-              ordered = TRUE)) # Make it an ordered factor
+              ordered = TRUE), # Make it an ordered factor |> 
+      question = factor(question,
+                         levels = rev(c("generate_information_knowledge_q10", "use_standardized_data_q11", "find_interpret_primary_and_secondary_data_q12", "use_appropriate_information_communication_technologies_q13", "understand_decision_support_tools_q14", "identify_emerging_technologies_q15", "impact_on_quality_safe_care_q16", "address_patients_needs_and_care_gaps_q17", "unexpected_consequences_of_implementation_q18", "how_data_is_exchanged_q19", "the_latest_legal_and_regulatory_requirements_q20", "patients_right_to_access_review_correct_q21")),
+                         ordered = TRUE))
 
 ggplot(nursing_long, aes(y = question, fill = response)) +
   geom_bar(position = "fill") +

@@ -3,21 +3,26 @@ output: html_document
 editor_options: 
   chunk_output_type: console
 ---
-Loading up the library
+
+#Loading up the library
+
 ```{r}
 library(tidyverse)
 library(viridis)
 library(janitor)
 library(ggdist)
+library(dplyr)
 ```
 
-Read in the orginal data
+#Read in the orginal data
+
 ```{r}
 nursing <- read_csv("data/De-Identified Informatics Competency Assessment for June 2024 Faculty  (Responses) - Form Responses 1.csv") |> 
   clean_names()
 ```
 
-changing some data table name
+#changing some data table name
+
 ```{r}
 new_names <- c("timestamp", "email_adress", "score", "current_role", "different_role", "teaching_informatics", "informatics_role_in_healthcare", "years_of_teaching_in_higher_education", "rank", "gender", "education_level", "ethnicity", "communication_technologies_in_healthcare_q1", "implement_health_information_technologies_q2", "deliver_care_q3", "workflow_processes_patient_client_outcomes_q4", "gather_generate_document_identify_q5", "entering_accurate_data_q6", "how_data_moves_q7", "identify_appropriate_data_q8", "describe_standardized_data_q9", "generate_information_knowledge_q10", "use_standardized_data_q11", "find_interpret_primary_and_secondary_data_q12", "use_appropriate_information_communication_technologies_q13", "understand_decision_support_tools_q14", "identify_emerging_technologies_q15", "impact_on_quality_safe_care_q16", "address_patients_needs_and_care_gaps_q17", "unexpected_consequences_of_implementation_q18", "how_data_is_exchanged_q19", "the_latest_legal_and_regulatory_requirements_q20", "patients_right_to_access_review_correct_q21")
 
@@ -32,8 +37,8 @@ na_counts <- nursing_new %>%
 print(na_counts)
 ```
 
-
 Data mutation and manipulation
+
 ```{r}
 nursing_new <- nursing_new |> 
   mutate(current_role = case_when(current_role %in% c("Adjunct Faculty", "Adjunct faculty (TUG/ELM)", "Professor Emerita, Adjunct Faculty", "adjunct faculty", "adjunct instructor")~"Adjunct Faculty",
@@ -123,16 +128,43 @@ nursing_new <- nursing_new |>
                    patients_right_to_access_review_correct_q21 == "Moderate knowledge/ some skill"~2,
                    patients_right_to_access_review_correct_q21 == "Adequate knowledge/ adequate skill/ could teach" ~ 3,
                    patients_right_to_access_review_correct_q21 == "Excellent: very knowledgeable/skilled/comfortable to teach" ~ 4,
-                   TRUE ~ NA_real_))
+                   TRUE ~ NA_real_)) |> 
+  mutate(generate_information_knowledge_q10 = case_when(generate_information_knowledge_q10 %in% c("No knowledge/no skill/unable to teach", "No knowledge/no skill/unable to teach, Minimal knowledge/ minimal skill")~"No knowledge/no skill/unable to teach",
+               TRUE~generate_information_knowledge_q10)) |> 
+  mutate(use_standardized_data_q11 = case_when(use_standardized_data_q11 %in% c("No knowledge/no skill/unable to teach", "No knowledge/no skill/unable to teach, Minimal knowledge/ minimal skill")~"No knowledge/no skill/unable to teach",
+               TRUE~use_standardized_data_q11)) |> 
+  mutate(find_interpret_primary_and_secondary_data_q12 = case_when(find_interpret_primary_and_secondary_data_q12 %in% c("No knowledge/no skill/unable to teach", "No knowledge/no skill/unable to teach, Minimal knowledge/ minimal skill")~"No knowledge/no skill/unable to teach",
+               TRUE~find_interpret_primary_and_secondary_data_q12)) |> 
+  mutate(use_appropriate_information_communication_technologies_q13 = case_when(use_appropriate_information_communication_technologies_q13 %in% c("No knowledge/no skill/unable to teach", "No knowledge/no skill/unable to teach, Minimal knowledge/ minimal skill")~"No knowledge/no skill/unable to teach",
+               TRUE~use_appropriate_information_communication_technologies_q13)) |> 
+  mutate(understand_decision_support_tools_q14 = case_when(understand_decision_support_tools_q14 %in% c("No knowledge/no skill/unable to teach", "No knowledge/no skill/unable to teach, Minimal knowledge/ minimal skill")~"No knowledge/no skill/unable to teach",
+               TRUE~understand_decision_support_tools_q14)) |> 
+  mutate(identify_emerging_technologies_q15 = case_when(identify_emerging_technologies_q15 %in% c("No knowledge/no skill/unable to teach", "No knowledge/no skill/unable to teach, Minimal knowledge/ minimal skill")~"No knowledge/no skill/unable to teach",
+               TRUE~identify_emerging_technologies_q15)) |> 
+  mutate(impact_on_quality_safe_care_q16 = case_when(impact_on_quality_safe_care_q16 %in% c("No knowledge/no skill/unable to teach", "No knowledge/no skill/unable to teach, Minimal knowledge/ minimal skill")~"No knowledge/no skill/unable to teach",
+               TRUE~impact_on_quality_safe_care_q16)) |> 
+  mutate(address_patients_needs_and_care_gaps_q17 = case_when(address_patients_needs_and_care_gaps_q17 %in% c("No knowledge/no skill/unable to teach", "No knowledge/no skill/unable to teach, Minimal knowledge/ minimal skill")~"No knowledge/no skill/unable to teach",
+               TRUE~address_patients_needs_and_care_gaps_q17)) |> 
+  mutate(unexpected_consequences_of_implementation_q18 = case_when(unexpected_consequences_of_implementation_q18 %in% c("No knowledge/no skill/unable to teach", "No knowledge/no skill/unable to teach, Minimal knowledge/ minimal skill")~"No knowledge/no skill/unable to teach",
+               TRUE~unexpected_consequences_of_implementation_q18)) |> 
+  mutate(how_data_is_exchanged_q19 = case_when(how_data_is_exchanged_q19 %in% c("No knowledge/no skill/unable to teach", "No knowledge/no skill/unable to teach, Minimal knowledge/ minimal skill")~"No knowledge/no skill/unable to teach",
+               TRUE~how_data_is_exchanged_q19)) |> 
+  mutate(the_latest_legal_and_regulatory_requirements_q20 = case_when(the_latest_legal_and_regulatory_requirements_q20 %in% c("No knowledge/no skill/unable to teach", "No knowledge/no skill/unable to teach, Minimal knowledge/ minimal skill")~"No knowledge/no skill/unable to teach",
+               TRUE~the_latest_legal_and_regulatory_requirements_q20)) |> 
+  mutate(patients_right_to_access_review_correct_q21 = case_when(patients_right_to_access_review_correct_q21 %in% c("No knowledge/no skill/unable to teach", "No knowledge/no skill/unable to teach, Minimal knowledge/ minimal skill")~"No knowledge/no skill/unable to teach",
+               TRUE~patients_right_to_access_review_correct_q21))
+  
 ```
 
 Create one standardized response for evaluation
+
 ```{r}
 nursing_new <- nursing_new |> 
   mutate(confidence_score = (num_q10+num_q11+num_q12+num_q13+num_q14+num_q15+num_q16+num_q17+num_q18+num_q19+num_q20+num_q21)/12)
 ```
 
 Interactions based on the numerical response
+
 ```{r}
 ggplot(nursing_new, aes(y = current_role, x = confidence_score))+
   geom_boxplot()
@@ -147,9 +179,8 @@ nursing_new |>
   count(gender)
 ```
 
-
-
 EDA: Interaction
+
 ```{r}
 nursing_long <-nursing_new |> 
   select(generate_information_knowledge_q10:patients_right_to_access_review_correct_q21) |> 
@@ -173,7 +204,9 @@ ggplot(nursing_long, aes(y = question, fill = response)) +
   #       axis.ticks.y = element_blank())+
   scale_fill_viridis_d()
 ```
+
 Table for interaction
+
 ```{r}
 proportion_table <- nursing_long |> 
   group_by(question, response) |> 
@@ -197,12 +230,13 @@ prortion_table_test <- proportion_table |>
     No_knowledge = paste(count_no_knowledge_no_skill_unable_to_teach, sprintf("(%0.2f)", as.numeric(proportion_no_knowledge_no_skill_unable_to_teach)))
   ) |> 
   select(question, Excellent_knowledge, Adequate_knowledge, Moderate_knowledge, Minimal_knowledge,No_knowledge)
-  
+
+View(prortion_table_test)
 
 ```
 
-
 EDA: Single variable distribution
+
 ```{r}
 ggplot(nursing_new, aes(y = current_role)) +
   geom_bar(fill = "navy") +
@@ -221,5 +255,41 @@ ggplot(nursing_new, aes(y = rank)) +
 
 
 ```
+
+# descriptive response
+```{r}
+nursing_new <- nursing_new |> 
+  mutate(n_excellent = rowSums(
+    across(generate_information_knowledge_q10:patients_right_to_access_review_correct_q21) == "Excellent: very knowledgeable/skilled/comfortable to teach", na.rm = TRUE)) |> 
+  mutate(n_adequate = rowSums(
+    across(generate_information_knowledge_q10:patients_right_to_access_review_correct_q21) == "Adequate knowledge/ adequate skill/ could teach", na.rm = TRUE)) |> 
+  mutate(n_moderate = rowSums(
+    across(generate_information_knowledge_q10:patients_right_to_access_review_correct_q21) == "Moderate knowledge/ some skill", na.rm = TRUE)) |> 
+  mutate(n_minimal = rowSums(
+    across(generate_information_knowledge_q10:patients_right_to_access_review_correct_q21) == "Minimal knowledge/ minimal skill", na.rm = TRUE)) |> 
+  mutate(n_no_knowledge = rowSums(
+    across(generate_information_knowledge_q10:patients_right_to_access_review_correct_q21) == "No knowledge/no skill/unable to teach", na.rm = TRUE)) |> 
+  mutate(excellent_8 = n_excellent >= 8,
+         adequate_8 = n_adequate >= 8,
+         moderate_8 = n_moderate >= 8,
+         minimal_8= n_minimal >= 8,
+         no_knowledge_8 = n_no_knowledge >= 8)
+
+nu<-nursing_new |> 
+  mutate(n_no_knowledge = rowSums(
+    across(generate_information_knowledge_q10:patients_right_to_access_review_correct_q21) == "No knowledge/no skill/unable to teach", na.rm = TRUE))
+  
+
+```
+
+
+
+# Table for descriptive response
+```{r}
+
+```
+
+
+
 
 

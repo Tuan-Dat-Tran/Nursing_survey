@@ -12,6 +12,7 @@ library(viridis)
 library(janitor)
 library(ggdist)
 library(dplyr)
+library(cowplot)
 ```
 
 #Read in the orginal data
@@ -275,21 +276,288 @@ nursing_new <- nursing_new |>
          minimal_8= n_minimal >= 8,
          no_knowledge_8 = n_no_knowledge >= 8)
 
-nu<-nursing_new |> 
-  mutate(n_no_knowledge = rowSums(
-    across(generate_information_knowledge_q10:patients_right_to_access_review_correct_q21) == "No knowledge/no skill/unable to teach", na.rm = TRUE))
-  
+
 
 ```
 
 
 
-# Table for descriptive response
+# Table and Visualization for excellent descriptive response
+```{r}
+excellent_table <-nursing_new |> 
+  filter(excellent_8 == TRUE) |> 
+  group_by(current_role, teaching_informatics, years_of_teaching_in_higher_education, rank, gender, education_level, ethnicity) |> 
+  summarise(count = n())
+
+View(excellent_table)
+
+#Visuals
+
+
+e1 <- ggplot(excellent_table, aes(y = current_role))+
+  geom_bar()+
+  labs(title = "Role for Excellent Response",
+       y = "Current Role")
+
+e2 <-ggplot(excellent_table, aes(y = teaching_informatics))+
+  geom_bar()+
+  labs(title = "Teaching Informatics for Excellent Response",
+       y = "Teaching Informatics")
+
+e3 <-ggplot(excellent_table, aes(y = years_of_teaching_in_higher_education))+
+  geom_bar()+
+  labs(title = "Years of Teaching for Excellent Response",
+       y = "Years of Teaching in Higher Education")
+
+e4 <-ggplot(excellent_table, aes(y = rank))+
+  geom_bar()+
+  labs(title = "Ranks for Excellent Response",
+       y = "Ranks")
+
+e5 <-ggplot(excellent_table, aes(y = gender))+
+  geom_bar()+
+  labs(title = "Gender for Excellent Response",
+       y = "Gender")
+e6 <-ggplot(excellent_table, aes(y = education_level))+
+  geom_bar()+
+  labs(title = "Education Level for Excellent Response",
+       y = "Education Level")
+
+e7 <-ggplot(excellent_table, aes(y = ethnicity))+
+  geom_bar()+
+  labs(title = "ethnicity for Excellent Response",
+       y = "ethnicity")
+
+plot_grid(e1, e2, e3, e4, e5, e6, e7)
+
+```
+
+
+
+# Table and Visualization for adequate descriptive response
+```{r}
+adequate_table <-nursing_new |> 
+  filter(adequate_8 == TRUE) |> 
+  group_by(current_role, teaching_informatics, years_of_teaching_in_higher_education, rank, gender, education_level, ethnicity) |> 
+  summarise(count = n())
+
+View(adequate_table)
+
+#Visuals
+
+
+a1 <- ggplot(adequate_table, aes(y = current_role))+
+  geom_bar()+
+  labs(title = "Role for Adequate Response",
+       y = "Current Role")
+
+a2 <-ggplot(adequate_table, aes(y = teaching_informatics))+
+  geom_bar()+
+  labs(title = "Teaching Informatics for Adequate Response",
+       y = "Teaching Informatics")
+
+a3 <-ggplot(adequate_table, aes(y = years_of_teaching_in_higher_education))+
+  geom_bar()+
+  labs(title = "Years of Teaching for Adequate Response",
+       y = "Years of Teaching in Higher Education")
+
+a4 <-ggplot(adequate_table, aes(y = rank))+
+  geom_bar()+
+  labs(title = "Ranks for Adequate Response",
+       y = "Ranks")
+
+a5 <-ggplot(adequate_table, aes(y = gender))+
+  geom_bar()+
+  labs(title = "Gender for Adequate Response",
+       y = "Gender")
+a6 <-ggplot(adequate_table, aes(y = education_level))+
+  geom_bar()+
+  labs(title = "Education Level for Adequate Response",
+       y = "Education Level")
+
+a7 <-ggplot(adequate_table, aes(y = ethnicity))+
+  geom_bar()+
+  labs(title = "ethnicity for Adequate Response",
+       y = "ethnicity")
+
+plot_grid(a1, a2, a3, a4, a5, a6, a7)
+```
+
+
+
+# Table and Visualization for moderate descriptive response
+```{r}
+moderate_table <-nursing_new |> 
+  filter(moderate_8 == TRUE) |> 
+  group_by(current_role, teaching_informatics, years_of_teaching_in_higher_education, rank, gender, education_level, ethnicity) |> 
+  summarise(count = n())
+
+View(moderate_table)
+
+#Visuals
+
+
+m1 <- ggplot(moderate_table, aes(y = current_role))+
+  geom_bar()+
+  labs(title = "Role for Moderate Response",
+       y = "Current Role")
+
+m2 <-ggplot(moderate_table, aes(y = teaching_informatics))+
+  geom_bar()+
+  labs(title = "Teaching Informatics for Moderate Response",
+       y = "Teaching Informatics")
+
+m3 <-ggplot(moderate_table, aes(y = years_of_teaching_in_higher_education))+
+  geom_bar()+
+  labs(title = "Years of Teaching for Moderate Response",
+       y = "Years of Teaching in Higher Education")
+
+m4 <-ggplot(moderate_table, aes(y = rank))+
+  geom_bar()+
+  labs(title = "Ranks for Moderate Response",
+       y = "Ranks")
+
+m5 <-ggplot(moderate_table, aes(y = gender))+
+  geom_bar()+
+  labs(title = "Gender for Moderate Response",
+       y = "Gender")
+m6 <-ggplot(moderate_table, aes(y = education_level))+
+  geom_bar()+
+  labs(title = "Education Level for Moderate Response",
+       y = "Education Level")
+
+m7 <-ggplot(moderate_table, aes(y = ethnicity))+
+  geom_bar()+
+  labs(title = "ethnicity for Moderate Response",
+       y = "ethnicity")
+
+plot_grid(m1, m2, m3, m4, m5, m6, m7)
+```
+
+
+# Table and Visualization for minimal descriptive response
+```{r}
+minimal_table <-nursing_new |> 
+  filter(minimal_8 == TRUE) |> 
+  group_by(current_role, teaching_informatics, years_of_teaching_in_higher_education, rank, gender, education_level, ethnicity) |> 
+  summarise(count = n())
+
+View(minimal_table)
+
+#Visuals
+
+
+mi1 <- ggplot(minimal_table, aes(y = current_role))+
+  geom_bar()+
+  labs(title = "Role for Minimal Response",
+       y = "Current Role")
+
+mi2 <-ggplot(minimal_table, aes(y = teaching_informatics))+
+  geom_bar()+
+  labs(title = "Teaching Informatics for Minimal Response",
+       y = "Teaching Informatics")
+
+mi3 <-ggplot(minimal_table, aes(y = years_of_teaching_in_higher_education))+
+  geom_bar()+
+  labs(title = "Years of Teaching for Minimal Response",
+       y = "Years of Teaching in Higher Education")
+
+mi4 <-ggplot(minimal_table, aes(y = rank))+
+  geom_bar()+
+  labs(title = "Ranks for Minimal Response",
+       y = "Ranks")
+
+mi5 <-ggplot(minimal_table, aes(y = gender))+
+  geom_bar()+
+  labs(title = "Gender for Minimal Response",
+       y = "Gender")
+mi6 <-ggplot(minimal_table, aes(y = education_level))+
+  geom_bar()+
+  labs(title = "Education Level for Minimal Response",
+       y = "Education Level")
+
+mi7 <-ggplot(minimal_table, aes(y = ethnicity))+
+  geom_bar()+
+  labs(title = "ethnicity for Minimal Response",
+       y = "ethnicity")
+
+plot_grid(mi1, mi2, mi3, mi4, mi5, mi6, mi7)
+```
+
+
+
+# Table and Visualization for minimal descriptive response
+```{r}
+no_knowledge_table <-nursing_new |> 
+  filter(no_knowledge_8 == TRUE) |> 
+  group_by(current_role, teaching_informatics, years_of_teaching_in_higher_education, rank, gender, education_level, ethnicity) |> 
+  summarise(count = n())
+
+View(no_knowledge_table)
+
+#Visuals
+
+
+n1 <- ggplot(no_knowledge_table, aes(y = current_role))+
+  geom_bar()+
+  labs(title = "Role for No Knowledge Response",
+       y = "Current Role")
+
+n2 <-ggplot(no_knowledge_table, aes(y = teaching_informatics))+
+  geom_bar()+
+  labs(title = "Teaching Informatics for No Knowledge Response",
+       y = "Teaching Informatics")
+
+n3 <-ggplot(no_knowledge_table, aes(y = years_of_teaching_in_higher_education))+
+  geom_bar()+
+  labs(title = "Years of Teaching for No Knowledge Response",
+       y = "Years of Teaching in Higher Education")
+
+n4 <-ggplot(no_knowledge_table, aes(y = rank))+
+  geom_bar()+
+  labs(title = "Ranks for No Knowledge Response",
+       y = "Ranks")
+
+n5 <-ggplot(no_knowledge_table, aes(y = gender))+
+  geom_bar()+
+  labs(title = "Gender for No Knowledge Response",
+       y = "Gender")
+n6 <-ggplot(no_knowledge_table, aes(y = education_level))+
+  geom_bar()+
+  labs(title = "Education Level for No Knowledge Response",
+       y = "Education Level")
+
+n7 <-ggplot(no_knowledge_table, aes(y = ethnicity))+
+  geom_bar()+
+  labs(title = "ethnicity for No Knowledge Response",
+       y = "ethnicity")
+
+plot_grid(n1, n2, n3, n4, n5, n6, n7)
+```
+
+
+# Table for comparison across the responses
+```{r}
+# Reshape the data
+test_long<-nursing_new |> 
+  pivot_longer(cols = c(excellent_8, adequate_8, moderate_8, minimal_8, no_knowledge_8),
+               names_to = "answer_type",
+               values_to = "is_true")
+
+# Summarize the data to get counts of TRUE values for each group
+
+summary_table<- test_long |> 
+  filter(is_true == TRUE) |> # Only keep rows where the value is TRUE
+  group_by(current_role, teaching_informatics, years_of_teaching_in_higher_education, rank, gender, education_level, ethnicity, answer_type) |> 
+  summarize(count_true = n(), .groups = "drop")
+
+  
+
+
+```
+
+#Cluster analysis and Visualization
 ```{r}
 
 ```
-
-
-
-
 

@@ -13,6 +13,7 @@ library(janitor)
 library(ggdist)
 library(dplyr)
 library(cowplot)
+library(ggplot2)
 ```
 
 #Read in the orginal data
@@ -558,6 +559,58 @@ summary_table<- test_long |>
 
 #Cluster analysis and Visualization
 ```{r}
+#Perform clustering
+##K-means Clustering
+
+nursing_cluster <- nursing_new |> 
+  select(num_q10:num_q21)
+
+#scale the data (important for K-means)
+nursing_cluster_scaled <- scale(nursing_cluster)
+nursing_cluster_scaled <- nursing_cluster_scaled[complete.cases(nursing_cluster_scaled), ]
+
+# Perform K-means clustering with 3 clusters
+set.seed(123)
+kmeans_results <- kmeans(nursing_cluster_scaled, centers = 3)
+
+nursing_new_cluster <- nursing_new |> 
+  filter(!if_any(c(num_q10:num_q21), is.na))
+
+
+nursing_new_cluster$cluster <- kmeans_results$cluster
+
+#Cluster summary
+cluster_summary <- nursing_new_cluster |> 
+  group_by(cluster) |> 
+  summarise(
+    count = n(),
+    average_response = rowMeans(across(num_q10:num_q21), na.rm = TRUE),
+    gender_distribution = toString(table(gender)),
+    rank_distribution = toString(table(rank)),
+    roles_distribution = toString(table(current_role))
+  )
+
+print(cluster_summary)
+
+# Gather the question responses for plotting
+nursing_new_cluster_long <- nursing_new_cluster |> 
+  pivot_longer(cols = num_q10:num_q21, names_to = "question", values_to = "response")
+
+# Plot the distribution of responses by cluster
+ggplot(nursing_new_cluster_long, aes(x = question, y = response, fill = as.factor(cluster))) +
+  geom_boxplot() +
+  labs(title = "Distribution of Responses by Cluster", fill = "Cluster") +
+  theme_minimal()
+
+# Calculate the proportion of high (excellent/adequate) vs low (minimal/no) responses in each cluster
+cluster_consistency <- nursing_new_cluster %>%
+  group_by(cluster) |> 
+  summarise(
+    high_responses = mean(rowMeans(across(num_q10:num_q21), na.rm = TRUE) >= 4),
+    low_responses = mean(rowMeans(across(num_q10:num_q21), na.rm = TRUE) <= 2)
+  )
+
+print(cluster_consistency)
 
 ```
 

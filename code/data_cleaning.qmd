@@ -614,3 +614,15 @@ print(cluster_consistency)
 
 ```
 
+
+#Cross tab 
+```{r}
+
+```
+
+
+
+
+
+
+

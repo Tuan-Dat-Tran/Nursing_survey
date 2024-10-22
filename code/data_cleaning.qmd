@@ -334,6 +334,36 @@ plot_grid(e1, e2, e3, e4, e5, e6, e7)
 ```
 
 
+```{r}
+prop_excellent<-nursing_new |> 
+  group_by(excellent_8) |> 
+  summarize(n = n(),
+            prop_white = sum(ethnicity == "White")/n(),
+            prop_faculty = sum(current_role == "Faculty")/n(),
+            prop_full_time = sum(teaching_informatics == "Full-time",
+                                 na.rm = TRUE)/n(),
+            prop_part_time = sum(teaching_informatics == "Part-time",
+                                 na.rm = TRUE)/n(),
+            prop_not_at_all = sum(teaching_informatics == "Not at all",
+                                 na.rm = TRUE)/n(),
+            prop_2_5_yrs = sum(years_of_teaching_in_higher_education == "2-5",
+                                 na.rm = TRUE)/n(),
+            prop_master = sum(education_level == "Masters",
+                                 na.rm = TRUE)/n())
+
+View(prop_excellent)
+```
+
+
+```{r}
+m1 <- lm(confidence_score ~ ethnicity + current_role + teaching_informatics + years_of_teaching_in_higher_education + gender, data = nursing_new)
+library(broom)
+tidy(m1)
+
+
+```
+
+
 
 # Table and Visualization for adequate descriptive response
 ```{r}
@@ -382,6 +412,27 @@ a7 <-ggplot(adequate_table, aes(y = ethnicity))+
        y = "ethnicity")
 
 plot_grid(a1, a2, a3, a4, a5, a6, a7)
+```
+
+
+```{r}
+prop_adequate<- nursing_new |> 
+  group_by(adequate_8) |> 
+  summarize(n = n(),
+            prop_white = sum(ethnicity == "White")/n(),
+            prop_faculty = sum(current_role == "Faculty")/n(),
+            prop_full_time = sum(teaching_informatics == "Full-time",
+                                 na.rm = TRUE)/n(),
+            prop_part_time = sum(teaching_informatics == "Part-time",
+                                 na.rm = TRUE)/n(),
+            prop_not_at_all = sum(teaching_informatics == "Not at all",
+                                 na.rm = TRUE)/n(),
+            prop_2_5_yrs = sum(years_of_teaching_in_higher_education == "2-5",
+                                 na.rm = TRUE)/n(),
+            prop_master = sum(education_level == "Masters",
+                                 na.rm = TRUE)/n())
+
+View(prop_adequate)
 ```
 
 
@@ -436,6 +487,28 @@ plot_grid(m1, m2, m3, m4, m5, m6, m7)
 ```
 
 
+```{r}
+prop_moderate<-nursing_new |> 
+  group_by(moderate_8) |> 
+  summarize(n = n(),
+            prop_white = sum(ethnicity == "White")/n(),
+            prop_faculty = sum(current_role == "Faculty")/n(),
+            prop_full_time = sum(teaching_informatics == "Full-time",
+                                 na.rm = TRUE)/n(),
+            prop_part_time = sum(teaching_informatics == "Part-time",
+                                 na.rm = TRUE)/n(),
+            prop_not_at_all = sum(teaching_informatics == "Not at all",
+                                 na.rm = TRUE)/n(),
+            prop_2_5_yrs = sum(years_of_teaching_in_higher_education == "2-5",
+                                 na.rm = TRUE)/n(),
+            prop_master = sum(education_level == "Masters",
+                                 na.rm = TRUE)/n())
+
+View(prop_moderate)
+```
+
+
+
 # Table and Visualization for minimal descriptive response
 ```{r}
 minimal_table <-nursing_new |> 
@@ -487,7 +560,29 @@ plot_grid(mi1, mi2, mi3, mi4, mi5, mi6, mi7)
 
 
 
-# Table and Visualization for minimal descriptive response
+```{r}
+prop_minimal <- nursing_new |> 
+  group_by(minimal_8) |> 
+  summarize(n = n(),
+            prop_white = sum(ethnicity == "White")/n(),
+            prop_faculty = sum(current_role == "Faculty")/n(),
+            prop_full_time = sum(teaching_informatics == "Full-time",
+                                 na.rm = TRUE)/n(),
+            prop_part_time = sum(teaching_informatics == "Part-time",
+                                 na.rm = TRUE)/n(),
+            prop_not_at_all = sum(teaching_informatics == "Not at all",
+                                 na.rm = TRUE)/n(),
+            prop_2_5_yrs = sum(years_of_teaching_in_higher_education == "2-5",
+                                 na.rm = TRUE)/n(),
+            prop_master = sum(education_level == "Masters",
+                                 na.rm = TRUE)/n())
+
+View(prop_minimal)
+```
+
+
+
+# Table and Visualization for no knowledge descriptive response
 ```{r}
 no_knowledge_table <-nursing_new |> 
   filter(no_knowledge_8 == TRUE) |> 
@@ -535,6 +630,28 @@ n7 <-ggplot(no_knowledge_table, aes(y = ethnicity))+
 
 plot_grid(n1, n2, n3, n4, n5, n6, n7)
 ```
+
+
+```{r}
+prop_no_knowledge <- nursing_new |> 
+  group_by(no_knowledge_8) |> 
+  summarize(n = n(),
+            prop_white = sum(ethnicity == "White")/n(),
+            prop_faculty = sum(current_role == "Faculty")/n(),
+            prop_full_time = sum(teaching_informatics == "Full-time",
+                                 na.rm = TRUE)/n(),
+            prop_part_time = sum(teaching_informatics == "Part-time",
+                                 na.rm = TRUE)/n(),
+            prop_not_at_all = sum(teaching_informatics == "Not at all",
+                                 na.rm = TRUE)/n(),
+            prop_2_5_yrs = sum(years_of_teaching_in_higher_education == "2-5",
+                                 na.rm = TRUE)/n(),
+            prop_master = sum(education_level == "Masters",
+                                 na.rm = TRUE)/n())
+
+View(prop_no_knowledge)
+```
+
 
 
 # Table for comparison across the responses

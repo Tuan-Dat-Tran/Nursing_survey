@@ -165,7 +165,7 @@ nursing_new <- nursing_new |>
   mutate(confidence_score = (num_q10+num_q11+num_q12+num_q13+num_q14+num_q15+num_q16+num_q17+num_q18+num_q19+num_q20+num_q21)/12)
 ```
 
-Interactions based on the numerical response
+#Interactions based on the numerical response
 
 ```{r}
 ggplot(nursing_new, aes(y = current_role, x = confidence_score))+
@@ -734,9 +734,422 @@ print(cluster_consistency)
 
 #Cross tab 
 ```{r}
+library(dplyr)
+library(tidyr)
+
+# Example: Counting responses for generate_information_knowledge_q10 by current_role
+crosstab <- nursing_new %>%
+  count(current_role, how_data_moves_q7) %>%
+  pivot_wider(names_from = how_data_moves_q7, values_from = n, values_fill = list(n = 0))
+
+# Print the crosstab
+
+print(crosstab)
+```
+
+```{r}
+library(dplyr)
+library(tidyr)
+
+# Example: Counting responses for generate_information_knowledge_q10 by current_role
+crosstab <- nursing_new %>%
+  count(different_role, how_data_moves_q7) %>%
+  pivot_wider(names_from = how_data_moves_q7, values_from = n, values_fill = list(n = 0))
+
+# Print the crosstab
+
+print(crosstab)
 
 ```
 
+```{r}
+library(dplyr)
+library(tidyr)
+
+# Example: Counting responses for generate_information_knowledge_q10 by current_role
+crosstab <- nursing_new %>%
+  count(teaching_informatics, patients_right_to_access_review_correct_q21) %>%
+  pivot_wider(names_from = patients_right_to_access_review_correct_q21, values_from = n, values_fill = list(n = 0))
+
+# Print the crosstab
+
+print(crosstab)
+
+
+```
+
+
+```{r}
+library(dplyr)
+library(tidyr)
+
+# Example: Counting responses for generate_information_knowledge_q10 by current_role
+crosstab <- nursing_new %>%
+  count(informatics_role_in_healthcare, patients_right_to_access_review_correct_q21) %>%
+  pivot_wider(names_from = patients_right_to_access_review_correct_q21, values_from = n, values_fill = list(n = 0))
+
+# Print the crosstab
+
+print(crosstab)
+```
+
+```{r}
+library(dplyr)
+library(tidyr)
+
+nursing_new <- nursing_new |> 
+  mutate(patients_right_to_access_review_correct_q21 = factor(patients_right_to_access_review_correct_q21,
+                                                              levels = c("Excellent: very knowledgeable/skilled/comfortable to teach",
+                                                                         "Adequate knowledge/ adequate skill/ could teach",
+                                                                         "Moderate knowledge/ some skill",
+                                                                         "Moderate knowledge/ some skill, Adequate knowledge/ adequate skill/ could teach",
+                                                                         "Minimal knowledge/ minimal skill")))
+
+
+
+library(janitor)
+
+crosstab <- tabyl(nursing_new, patients_right_to_access_review_correct_q21, years_of_teaching_in_higher_education) %>%
+            adorn_percentages("all") %>% 
+            adorn_pct_formatting() %>% 
+            adorn_ns() # Adds counts alongside percentages
+crosstab
+
+
+```
+
+#Crosstab question 21
+
+```{r}
+library(dplyr)
+library(janitor)
+
+# Function to create crosstabs with a fixed variable and a list of other variables
+create_crosstabs <- function(data, fixed_var, variable_list) {
+  crosstabs <- list()
+  
+  for (var in variable_list) {
+      filtered_data <- data %>% filter(!is.na(!!sym(fixed_var)), !is.na(!!sym(var)))
+    # Dynamically create the crosstab for each variable in variable_list
+    crosstab <- tabyl(data, !!sym(fixed_var), !!sym(var)) %>%
+                adorn_totals("col") |> 
+                adorn_percentages("col") %>%
+                adorn_pct_formatting() %>%
+                adorn_ns() # Adds counts alongside percentages
+    
+    # Save each crosstab to a list with the variable name as the list element name
+    crosstabs[[var]] <- crosstab
+  }
+  
+  return(crosstabs)
+}
+
+# Define the list of variables for which we want to create crosstabs
+variables_to_cross <- c("current_role", "different_role", "teaching_informatics", "informatics_role_in_healthcare", "years_of_teaching_in_higher_education", "rank", "gender", "education_level", "ethnicity")
+
+# Run the function
+crosstab_results21 <- create_crosstabs(nursing_new, "patients_right_to_access_review_correct_q21", variables_to_cross)
+
+# View the crosstab for each variable
+crosstab_results21$current_role
+crosstab_results21$different_role
+crosstab_results21$teaching_informatics
+crosstab_results21$informatics_role_in_healthcare
+crosstab_results21$years_of_teaching_in_higher_education
+crosstab_results21$rank
+crosstab_results21$gender
+crosstab_results21$education_level
+crosstab_results21$ethnicity
+
+
+
+```
+
+#Crosstab question 10
+```{r}
+# Run the function
+crosstab_results10 <- create_crosstabs(nursing_new, "generate_information_knowledge_q10", variables_to_cross)
+
+# View the crosstab for each variable
+crosstab_results10$current_role
+crosstab_results10$different_role
+crosstab_results10$teaching_informatics
+crosstab_results10$informatics_role_in_healthcare
+crosstab_results10$years_of_teaching_in_higher_education
+crosstab_results10$rank
+crosstab_results10$gender
+crosstab_results10$education_level
+crosstab_results10$ethnicity
+```
+
+#Crosstab question 11
+```{r}
+# Run the function
+crosstab_results11 <- create_crosstabs(nursing_new, "use_standardized_data_q11", variables_to_cross)
+
+# View the crosstab for each variable
+crosstab_results11$current_role
+crosstab_results11$different_role
+crosstab_results11$teaching_informatics
+crosstab_results11$informatics_role_in_healthcare
+crosstab_results11$years_of_teaching_in_higher_education
+crosstab_results11$rank
+crosstab_results11$gender
+crosstab_results11$education_level
+crosstab_results11$ethnicity
+```
+
+#Crosstab question 12
+```{r}
+# Run the function
+crosstab_results12 <- create_crosstabs(nursing_new, "find_interpret_primary_and_secondary_data_q12", variables_to_cross)
+
+# View the crosstab for each variable
+crosstab_results12$current_role
+crosstab_results12$different_role
+crosstab_results12$teaching_informatics
+crosstab_results12$informatics_role_in_healthcare
+crosstab_results12$years_of_teaching_in_higher_education
+crosstab_results12$rank
+crosstab_results12$gender
+crosstab_results12$education_level
+crosstab_results12$ethnicity
+```
+
+#Crosstab question 13
+
+```{r}
+# Run the function
+crosstab_results13 <- create_crosstabs(nursing_new, "use_appropriate_information_communication_technologies_q13", variables_to_cross)
+
+# View the crosstab for each variable
+crosstab_results13$current_role
+crosstab_results13$different_role
+crosstab_results13$teaching_informatics
+crosstab_results13$informatics_role_in_healthcare
+crosstab_results13$years_of_teaching_in_higher_education
+crosstab_results13$rank
+crosstab_results13$gender
+crosstab_results13$education_level
+crosstab_results13$ethnicity
+```
+
+#Crosstab 14
+
+```{r}
+# Run the function
+crosstab_results14 <- create_crosstabs(nursing_new, "understand_decision_support_tools_q14", variables_to_cross)
+
+# View the crosstab for each variable
+crosstab_results14$current_role
+crosstab_results14$different_role
+crosstab_results14$teaching_informatics
+crosstab_results14$informatics_role_in_healthcare
+crosstab_results14$years_of_teaching_in_higher_education
+crosstab_results14$rank
+crosstab_results14$gender
+crosstab_results14$education_level
+crosstab_results14$ethnicity
+```
+
+#Crosstab 15
+
+```{r}
+# Run the function
+crosstab_results15 <- create_crosstabs(nursing_new, "identify_emerging_technologies_q15", variables_to_cross)
+
+# View the crosstab for each variable
+crosstab_results15$current_role
+crosstab_results15$different_role
+crosstab_results15$teaching_informatics
+crosstab_results15$informatics_role_in_healthcare
+crosstab_results15$years_of_teaching_in_higher_education
+crosstab_results15$rank
+crosstab_results15$gender
+crosstab_results15$education_level
+crosstab_results15$ethnicity
+```
+
+#Crosstab 16
+
+```{r}
+# Run the function
+crosstab_results16 <- create_crosstabs(nursing_new, "impact_on_quality_safe_care_q16", variables_to_cross)
+
+# View the crosstab for each variable
+crosstab_results16$current_role
+crosstab_results16$different_role
+crosstab_results16$teaching_informatics
+crosstab_results16$informatics_role_in_healthcare
+crosstab_results16$years_of_teaching_in_higher_education
+crosstab_results16$rank
+crosstab_results16$gender
+crosstab_results16$education_level
+crosstab_results16$ethnicity
+```
+
+#Crosstab 17
+```{r}
+# Run the function
+crosstab_results17 <- create_crosstabs(nursing_new, "address_patients_needs_and_care_gaps_q17", variables_to_cross)
+
+# View the crosstab for each variable
+crosstab_results17$current_role
+crosstab_results17$different_role
+crosstab_results17$teaching_informatics
+crosstab_results17$informatics_role_in_healthcare
+crosstab_results17$years_of_teaching_in_higher_education
+crosstab_results17$rank
+crosstab_results17$gender
+crosstab_results17$education_level
+crosstab_results17$ethnicity
+```
+
+#Crosstab 18
+```{r}
+# Run the function
+crosstab_results18 <- create_crosstabs(nursing_new, "unexpected_consequences_of_implementation_q18", variables_to_cross)
+
+# View the crosstab for each variable
+crosstab_results18$current_role
+crosstab_results18$different_role
+crosstab_results18$teaching_informatics
+crosstab_results18$informatics_role_in_healthcare
+crosstab_results18$years_of_teaching_in_higher_education
+crosstab_results18$rank
+crosstab_results18$gender
+crosstab_results18$education_level
+crosstab_results18$ethnicity
+```
+
+
+#Crosstab 19 
+```{r}
+# Run the function
+crosstab_results19 <- create_crosstabs(nursing_new, "how_data_is_exchanged_q19", variables_to_cross)
+
+# View the crosstab for each variable
+crosstab_results19$current_role
+crosstab_results19$different_role
+crosstab_results19$teaching_informatics
+crosstab_results19$informatics_role_in_healthcare
+crosstab_results19$years_of_teaching_in_higher_education
+crosstab_results19$rank
+crosstab_results19$gender
+crosstab_results19$education_level
+crosstab_results19$ethnicity
+```
+
+#Crosstab 20 
+```{r}
+# Run the function
+crosstab_results20 <- create_crosstabs(nursing_new, "the_latest_legal_and_regulatory_requirements_q20", variables_to_cross)
+
+# View the crosstab for each variable
+crosstab_results20$current_role
+crosstab_results20$different_role
+crosstab_results20$teaching_informatics
+crosstab_results20$informatics_role_in_healthcare
+crosstab_results20$years_of_teaching_in_higher_education
+crosstab_results20$rank
+crosstab_results20$gender
+crosstab_results20$education_level
+crosstab_results20$ethnicity
+```
+
+
+#Linear Regression response distribution 
+
+```{r}
+nursing_new <- nursing_new |> 
+  mutate(confidence_score_full = (num_q10+num_q11+num_q12+num_q13+num_q14+num_q15+num_q16+num_q17+num_q18+num_q19+num_q20+num_q21))
+```
+
+```{r}
+library(ggplot2)
+
+# Calculate mean and standard deviation of confidence_score_full
+mean_score <- mean(nursing_new$confidence_score, na.rm = TRUE)
+sd_score <- sd(nursing_new$confidence_score, na.rm = TRUE)
+
+ggplot(nursing_new, aes(x = confidence_score)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +  # Histogram with density scaling
+  stat_function(fun = dnorm, args = list(mean = mean_score, sd = sd_score), 
+                color = "red", size = 1) +  # Normal curve
+  labs(title = "Histogram with Normal Curve", 
+       x = "Confidence Score", 
+       y = "Density") +
+  theme_minimal()
+```
+
+```{r}
+library(ggplot2)
+
+# Calculate mean and standard deviation of confidence_score_full
+mean_score <- mean(nursing_new$confidence_score_full, na.rm = TRUE)
+sd_score <- sd(nursing_new$confidence_score_full, na.rm = TRUE)
+
+ggplot(nursing_new, aes(x = confidence_score_full)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black") +  # Histogram with density scaling
+  stat_function(fun = dnorm, args = list(mean = mean_score, sd = sd_score), 
+                color = "red", size = 1) +  # Normal curve
+  labs(title = "Histogram with Normal Curve", 
+       x = "Confidence Score", 
+       y = "Density") +
+  theme_minimal()
+
+```
+
+
+# Try linear regression 
+```{r}
+m1 <- lm(confidence_score_full ~ current_role + different_role + teaching_informatics + informatics_role_in_healthcare + years_of_teaching_in_higher_education + rank + gender + education_level + ethnicity , data = nursing_new)
+library(broom)
+tidy(m1)
+```
+
+
+# Retry linear regression 
+```{r}
+nursing_new<-nursing_new |> 
+  mutate(ethnic_mod = case_when(ethnicity %in% c("Asian", "Asian, White", "Black or African American", "Black or African American, White", "Hispanic or Latino", "Native Hawaiian or Pacific Islander")~"Non_White",
+         ethnicity %in% c("White")~"White")) |> 
+  mutate(informatics_role_mod = case_when(informatics_role_in_healthcare %in% c("Part-time", "Per diem", "Primary/full time")~"Yes",
+          informatics_role_in_healthcare %in% c("No")~"No"))
+```
+
+```{r}
+m2 <- lm(confidence_score_full ~ current_role + different_role + teaching_informatics + informatics_role_in_healthcare + years_of_teaching_in_higher_education + rank + gender + education_level + ethnic_mod , data = nursing_new)
+library(broom)
+tidy(m2)
+```
+
+
+```{r}
+m2 <- lm(confidence_score_full ~ years_of_teaching_in_higher_education + rank + education_level + ethnicity , data = nursing_new)
+library(broom)
+tidy(m2)
+summary(m2)
+
+#years_of_teaching_in_higher_education, rank, education_level, ethnicity
+```
+
+
+#Faceted histogram
+```{r}
+# Load necessary library
+library(ggplot2)
+
+# Faceted histogram by a variable (e.g., gender)
+ggplot(nursing_new, aes(x = confidence_score_full)) +
+  geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
+  facet_wrap(~ rank) +  # Facet by gender (or other variable)
+  labs(title = "Faceted Histogram of Confidence Score Full",
+       x = "Confidence Score Full",
+       y = "Count") +
+  theme_minimal()
+
+```
 
 
 

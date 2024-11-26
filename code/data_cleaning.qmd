@@ -1115,13 +1115,30 @@ nursing_new<-nursing_new |>
   mutate(ethnic_mod = case_when(ethnicity %in% c("Asian", "Asian, White", "Black or African American", "Black or African American, White", "Hispanic or Latino", "Native Hawaiian or Pacific Islander")~"Non_White",
          ethnicity %in% c("White")~"White")) |> 
   mutate(informatics_role_mod = case_when(informatics_role_in_healthcare %in% c("Part-time", "Per diem", "Primary/full time")~"Yes",
-          informatics_role_in_healthcare %in% c("No")~"No"))
+          informatics_role_in_healthcare %in% c("No")~"No")) |> 
+  mutate(education_level_mod = case_when(education_level %in% c("Bachelors, Masters, PhD", "DNP", "DNP, EdD", "EdD", "PhD")~"Doctoral",
+         education_level %in% c("Bachelors")~"Bachelors",
+         education_level %in% c("Masters")~"Masters"))
 ```
+
+
+#Testing each varible.
+```{r}
+m2 <- lm(confidence_score_full ~ informatics_role_mod, data = nursing_new)
+library(broom)
+tidy(m2)
+summary(m2)
+
+#none has good enough adjusted R square. 
+```
+
+
 
 ```{r}
 m2 <- lm(confidence_score_full ~ current_role + different_role + teaching_informatics + informatics_role_in_healthcare + years_of_teaching_in_higher_education + rank + gender + education_level + ethnic_mod , data = nursing_new)
 library(broom)
 tidy(m2)
+summary(m2)
 ```
 
 
@@ -1134,25 +1151,170 @@ summary(m2)
 #years_of_teaching_in_higher_education, rank, education_level, ethnicity
 ```
 
+```{r}
+m2 <- lm(confidence_score_full ~ years_of_teaching_in_higher_education, data = nursing_new)
+library(broom)
+tidy(m2)
+summary(m2)
+```
+
 
 #Faceted histogram
 ```{r}
-# Load necessary library
 library(ggplot2)
+library(dplyr)
 
-# Faceted histogram by a variable (e.g., gender)
-ggplot(nursing_new, aes(x = confidence_score_full)) +
+# Filter out rows with NA in `confidence_score_full` or `rank`
+nursing_new_filtered <- nursing_new %>%
+  filter(!is.na(confidence_score_full), !is.na(rank))
+
+# Calculate medians for each group on the filtered data
+#medians <- nursing_new_filtered %>%
+  #group_by(rank) %>%
+  #summarize(median_confidence = mean(confidence_score_full, na.rm = TRUE))
+
+# Create faceted histogram with median lines
+ggplot(nursing_new_filtered, aes(x = confidence_score_full)) +
   geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
-  facet_wrap(~ rank) +  # Facet by gender (or other variable)
-  labs(title = "Faceted Histogram of Confidence Score Full",
+  facet_wrap(~ rank, ncol = 1) +
+  geom_vline(xintercept = 30.35, aes(xintercept = median_confidence), 
+             color = "red", size = 1) +
+  labs(title = "Faceted Histogram of Confidence Score Full for Rank",
        x = "Confidence Score Full",
        y = "Count") +
   theme_minimal()
 
+
+
 ```
 
 
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Filter out rows with NA in `confidence_score_full` or `rank`
+nursing_new_filtered <- nursing_new %>%
+  filter(!is.na(confidence_score_full), !is.na(current_role))
+
+# Calculate medians for each group on the filtered data
+#medians <- nursing_new_filtered %>%
+  #group_by(rank) %>%
+  #summarize(median_confidence = mean(confidence_score_full, na.rm = TRUE))
+
+# Create faceted histogram with median lines
+ggplot(nursing_new_filtered, aes(x = confidence_score_full)) +
+  geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
+  facet_wrap(~ current_role, ncol = 1) +
+  geom_vline(xintercept = 30.35, aes(xintercept = median_confidence), 
+             color = "red", size = 1) +
+  labs(title = "Faceted Histogram of Confidence Score Full for Rank",
+       x = "Confidence Score Full",
+       y = "Count") +
+  theme_minimal()
 
 
+```
 
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Filter out rows with NA in `confidence_score_full` or `rank`
+nursing_new_filtered <- nursing_new %>%
+  filter(!is.na(confidence_score_full), !is.na(different_role))
+
+# Calculate medians for each group on the filtered data
+#medians <- nursing_new_filtered %>%
+  #group_by(rank) %>%
+  #summarize(median_confidence = mean(confidence_score_full, na.rm = TRUE))
+
+# Create faceted histogram with median lines
+ggplot(nursing_new_filtered, aes(x = confidence_score_full)) +
+  geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
+  facet_wrap(~ different_role, ncol = 1) +
+  geom_vline(xintercept = 30.35, aes(xintercept = median_confidence), 
+             color = "red", size = 1) +
+  labs(title = "Faceted Histogram of Confidence Score Full for Rank",
+       x = "Confidence Score Full",
+       y = "Count") +
+  theme_minimal()
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Filter out rows with NA in `confidence_score_full` or `rank`
+nursing_new_filtered <- nursing_new %>%
+  filter(!is.na(confidence_score_full), !is.na(teaching_informatics))
+
+# Calculate medians for each group on the filtered data
+#medians <- nursing_new_filtered %>%
+  #group_by(rank) %>%
+  #summarize(median_confidence = mean(confidence_score_full, na.rm = TRUE))
+
+# Create faceted histogram with median lines
+ggplot(nursing_new_filtered, aes(x = confidence_score_full)) +
+  geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
+  facet_wrap(~ teaching_informatics, ncol = 1) +
+  geom_vline(xintercept = 30.35, aes(xintercept = median_confidence), 
+             color = "red", size = 1) +
+  labs(title = "Faceted Histogram of Confidence Score Full for Rank",
+       x = "Confidence Score Full",
+       y = "Count") +
+  theme_minimal()
+```
+
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Filter out rows with NA in `confidence_score_full` or `rank`
+nursing_new_filtered <- nursing_new %>%
+  filter(!is.na(confidence_score_full), !is.na(years_of_teaching_in_higher_education))
+
+# Calculate medians for each group on the filtered data
+#medians <- nursing_new_filtered %>%
+  #group_by(rank) %>%
+  #summarize(median_confidence = mean(confidence_score_full, na.rm = TRUE))
+
+# Create faceted histogram with median lines
+ggplot(nursing_new_filtered, aes(x = confidence_score_full)) +
+  geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
+  facet_wrap(~ years_of_teaching_in_higher_education, ncol = 1) +
+  geom_vline(xintercept = 30.35, aes(xintercept = median_confidence), 
+             color = "red", size = 1) +
+  labs(title = "Faceted Histogram of Confidence Score Full for Rank",
+       x = "Confidence Score Full",
+       y = "Count") +
+  theme_minimal()
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Filter out rows with NA in `confidence_score_full` or `rank`
+nursing_new_filtered <- nursing_new %>%
+  filter(!is.na(confidence_score_full), !is.na(education_level))
+
+# Calculate medians for each group on the filtered data
+#medians <- nursing_new_filtered %>%
+  #group_by(rank) %>%
+  #summarize(median_confidence = mean(confidence_score_full, na.rm = TRUE))
+
+# Create faceted histogram with median lines
+ggplot(nursing_new_filtered, aes(x = confidence_score_full)) +
+  geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
+  facet_wrap(~ education_level, ncol = 1) +
+  geom_vline(xintercept = 30.35, aes(xintercept = median_confidence), 
+             color = "red", size = 1) +
+  labs(title = "Faceted Histogram of Confidence Score Full for Rank",
+       x = "Confidence Score Full",
+       y = "Count") +
+  theme_minimal()
+```
 
